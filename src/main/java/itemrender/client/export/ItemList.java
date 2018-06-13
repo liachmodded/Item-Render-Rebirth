@@ -14,7 +14,6 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -73,7 +72,7 @@ public class ItemList {
     private static List<String> itemDisplayNameMultiline(ItemStack itemstack) {
         List<String> nameList = null;
         try {
-            nameList = itemstack.getTooltip(Minecraft.getMinecraft().player, ITooltipFlag.TooltipFlags.NORMAL);
+            nameList = itemstack.getTooltip(Minecraft.getMinecraft().player,true);
         } catch (Throwable ignored) {
         }
 
@@ -110,7 +109,7 @@ public class ItemList {
                 if (permutations.isEmpty())
 //                    item.getSubItems(null, permutations);
                     for (CreativeTabs tab : item.getCreativeTabs())
-                        item.getSubItems(tab, permutations);
+                        item.getSubItems(item, tab, permutations);
 
                 if (permutations.isEmpty())
                     damageSearch(item, permutations);

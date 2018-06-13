@@ -111,6 +111,7 @@ public class ExportUtils {
         }
         for (EntityEntry Entity : ForgeRegistries.ENTITIES) {
             if (Entity == null) continue;
+//            if (!(Entity.newInstance(minecraft.world) instanceof EntityLivingBase)||!(Entity.newInstance(minecraft.world) instanceof EntityMob)) continue;
             if (getEntityOwner(Entity).equals("minecraft") && !ItemRenderMod.exportVanillaItems) continue;
 
             mobData = new MobData(Entity);
@@ -119,7 +120,7 @@ public class ExportUtils {
         }
         
         // Since refreshResources takes a long time, only refresh once for all the items
-        minecraft.getLanguageManager().setCurrentLanguage(new Language("zh_CN", "中国", "简体中文", false));
+        minecraft.getLanguageManager().setCurrentLanguage(new Language("zh_CN", "涓浗", "绠�浣撲腑鏂�", false));
         minecraft.gameSettings.language = "zh_CN";
         minecraft.refreshResources();
         minecraft.gameSettings.saveOptions();
@@ -139,7 +140,7 @@ public class ExportUtils {
         minecraft.getLanguageManager().setCurrentLanguage(new Language("en_US", "US", "English", false));
         minecraft.gameSettings.language = "en_US";
         minecraft.refreshResources();
-        minecraft.fontRenderer.setUnicodeFlag(false);
+        minecraft.fontRendererObj.setUnicodeFlag(false);
         minecraft.gameSettings.saveOptions();
 
         for (ItemData data : itemDataList) {

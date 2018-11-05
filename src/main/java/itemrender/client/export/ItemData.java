@@ -13,6 +13,7 @@ package itemrender.client.export;
 import itemrender.ItemRenderMod;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 
 /**
  * Created by Meow J on 8/17/2015.
@@ -30,6 +31,7 @@ public class ItemData {
     private int maxDurability;
     private String smallIcon;
     private String largeIcon;
+    private String nbt;
 
     private transient ItemStack itemStack;
 
@@ -46,6 +48,8 @@ public class ItemData {
         maxDurability = itemStack.getMaxDamage() + 1;
         smallIcon = ExportUtils.INSTANCE.getSmallIcon(itemStack);
         largeIcon = ExportUtils.INSTANCE.getLargeIcon(itemStack);
+        NBTTagCompound data = itemStack.getTagCompound();
+        this.nbt = data == null ? "" : data.toString();
         this.itemStack = itemStack;
     }
 

@@ -25,7 +25,9 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraftforge.client.resource.VanillaResourceType;
 import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
@@ -48,8 +50,8 @@ public class ExportUtils {
     private FBOHelper fboLarge;
     private FBOHelper fboEntity;
     private RenderItem itemRenderer = Minecraft.getMinecraft().getRenderItem();
-    private List<ItemData> itemDataList = new ArrayList<ItemData>();
-    private List<MobData> mobDataList = new ArrayList<MobData>();
+    private List<ItemData> itemDataList = new ArrayList<>();
+    private List<MobData> mobDataList = new ArrayList<>();
     public ExportUtils() {
         // Hardcoded value for mcmod.cn only, don't change this unless the website updates
         fboSmall = new FBOHelper(32);
@@ -61,7 +63,7 @@ public class ExportUtils {
     public String getLocalizedName(ItemStack itemStack) {
         return itemStack.getDisplayName();
     }
-    
+
     public String getType(ItemStack itemStack) {
         return (itemStack.getItem() instanceof ItemBlock) ? "Block" : "Item";
     }
@@ -77,7 +79,7 @@ public class ExportUtils {
     public String getEntityIcon(EntityEntry Entitymob){
         return Renderer.getEntityBase64(Entitymob, fboEntity);
     }
-    
+
     private String getItemOwner(ItemStack itemStack) {
         ResourceLocation registryName = itemStack.getItem().getRegistryName();
         return registryName == null ? "unnamed" : registryName.getResourceDomain();
@@ -86,7 +88,7 @@ public class ExportUtils {
         ResourceLocation registryName = Entitymob.getRegistryName();
         return registryName == null ? "unnamed" : registryName.getResourceDomain();
     }
-    
+
     public void exportMods() throws IOException{
         Minecraft minecraft = FMLClientHandler.instance().getClient();
         itemDataList.clear();
@@ -117,11 +119,11 @@ public class ExportUtils {
             mobDataList.add(mobData);
             if (!modList.contains(getEntityOwner(Entity))) modList.add(getEntityOwner(Entity));
         }
-        
+
         // Since refreshResources takes a long time, only refresh once for all the items
         minecraft.getLanguageManager().setCurrentLanguage(new Language("zh_CN", "中国", "简体中文", false));
         minecraft.gameSettings.language = "zh_CN";
-        minecraft.refreshResources();
+        FMLClientHandler.instance().refreshResources(VanillaResourceType.LANGUAGES);
         minecraft.gameSettings.saveOptions();
 
         for (ItemData data : itemDataList) {
@@ -138,7 +140,7 @@ public class ExportUtils {
 
         minecraft.getLanguageManager().setCurrentLanguage(new Language("en_US", "US", "English", false));
         minecraft.gameSettings.language = "en_US";
-        minecraft.refreshResources();
+        FMLClientHandler.instance().refreshResources(VanillaResourceType.LANGUAGES);
         minecraft.fontRenderer.setUnicodeFlag(false);
         minecraft.gameSettings.saveOptions();
 
@@ -147,13 +149,13 @@ public class ExportUtils {
                 ItemRenderMod.instance.log.info(I18n.format("itemrender.msg.addEN", data.getItemStack().getItem().getUnlocalizedName() + "@" + data.getItemStack().getMetadata()));
             data.setEnglishName(this.getLocalizedName(data.getItemStack()));
         }
-        
+
         for (MobData data : mobDataList) {
             if (ItemRenderMod.debugMode)
                 ItemRenderMod.instance.log.info(I18n.format("itemrender.msg.addEN", data.getMob().getRegistryName()));
             data.setEnglishname(new TextComponentTranslation("entity." + data.getMob().getName() + ".name", new Object[0]).getFormattedText());
         }
-        
+
         File export;
         File export1;
         for (String modid : modList) {
